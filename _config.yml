@@ -57,6 +57,20 @@ collections:
     sort_by: date
     permalink: /notices/:name/
 
+cert:
+  ca:
+    cn: "Sandbox Research Institute eduroam Root CA"
+    fingerprint_sha256: "33:59:DD:03:C1:8E:1A:F1:AD:7B:0E:6C:34:9F:D9:B2:F8:AF:B8:D3:F0:07:B6:D6:E5:A6:C6:42:05:48:4D:12"
+    valid_from: "2026-04-22"
+    valid_until: "2036-04-19"
+    download: "/assets/certs/sandbox_ca.pem"
+  server:
+    cn: "Sandbox Research Institute eduroam RADIUS"
+    fingerprint_sha256: "AA:10:E9:6C:AA:EE:6B:15:05:E0:13:23:1D:1F:9F:8A:8D:11:19:B0:39:9F:F8:5D:29:83:3A:1B:39:CA:AB:B2"
+    valid_from: "2026-04-22"
+    valid_until: "2028-04-21"
+    download: "/assets/certs/sandbox_radius.pem"
+
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
