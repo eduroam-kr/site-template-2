@@ -1,0 +1,248 @@
+:root {
+  --edu-blue: #003d7a;
+  --edu-light: #0066cc;
+  --edu-accent: #e8f4fd;
+}
+body { font-family: 'Noto Sans KR', sans-serif; background: #f4f6f9; }
+
+/* ── Navbar ── */
+.main-header.navbar {
+  background: var(--edu-blue) !important;
+  border-bottom: 3px solid var(--edu-light);
+}
+.main-header .navbar-brand {
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.3px;
+}
+.main-header .navbar-brand .brand-edu { color: #7ec8f7; }
+.navbar-nav .nav-link {
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 0.88rem;
+  padding: 0.5rem 0.9rem !important;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  background: rgba(255,255,255,0.15) !important;
+  color: #fff !important;
+}
+.navbar-nav .nav-link i { margin-right: 4px; }
+
+/* ── Hero ── */
+.hero-section {
+  background: linear-gradient(135deg, var(--edu-blue) 0%, #0055aa 60%, #0080cc 100%);
+  color: #fff;
+  padding: 52px 0 44px;
+  text-align: center;
+}
+.hero-section .eduroam-logo {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+.hero-section .eduroam-logo span { color: #7ec8f7; }
+.hero-section .sub {
+  font-size: 1rem;
+  opacity: 0.85;
+  margin-top: 6px;
+}
+.hero-section .hero-btn {
+  margin-top: 22px;
+  background: #fff;
+  color: var(--edu-blue);
+  border: none;
+  border-radius: 24px;
+  padding: 10px 32px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  display: inline-block;
+}
+.hero-section .hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  color: var(--edu-blue);
+  text-decoration: none;
+}
+
+/* ── Page Hero (sub pages) ── */
+.page-hero {
+  background: linear-gradient(135deg, var(--edu-blue) 0%, #0055aa 100%);
+  color: #fff;
+  padding: 36px 0 30px;
+}
+.page-hero h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.page-hero .page-sub {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* ── 퀵 카드 ── */
+.quick-cards { margin-top: -28px; }
+.quick-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 22px 16px;
+  text-align: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  border-top: 3px solid var(--edu-light);
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.quick-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  text-decoration: none;
+  color: inherit;
+}
+.quick-card .icon { font-size: 1.9rem; color: var(--edu-light); margin-bottom: 10px; }
+.quick-card .title { font-weight: 700; font-size: 0.9rem; color: #222; }
+.quick-card .desc { font-size: 0.76rem; color: #888; margin-top: 4px; line-height: 1.4; }
+
+/* ── 카드 공통 ── */
+.card { border-radius: 8px; border: none; box-shadow: 0 1px 8px rgba(0,0,0,0.07); }
+.card-header {
+  background: #fff;
+  border-bottom: 2px solid var(--edu-accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--edu-blue);
+  padding: 12px 18px;
+  border-radius: 8px 8px 0 0 !important;
+}
+.card-header i { margin-right: 6px; color: var(--edu-light); }
+
+/* ── 공지 리스트 ── */
+.notice-list { list-style: none; margin: 0; padding: 0; }
+.notice-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 18px;
+  font-size: 0.83rem;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.notice-list li:last-child { border-bottom: none; }
+.notice-list li:hover { background: var(--edu-accent); }
+.notice-list .badge-new {
+  background: var(--edu-light);
+  color: #fff;
+  font-size: 0.68rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-right: 6px;
+}
+.notice-list .date { color: #aaa; font-size: 0.75rem; flex-shrink: 0; margin-left: 8px; }
+
+/* ── 도움말 리스트 ── */
+.help-list { list-style: none; margin: 0; padding: 0; }
+.help-list li {
+  padding: 9px 18px;
+  font-size: 0.83rem;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.help-list li:last-child { border-bottom: none; }
+.help-list li:hover { background: var(--edu-accent); }
+.help-list li i { font-size: 0.7rem; color: #aaa; margin-right: 6px; }
+
+/* ── 콘텐츠 섹션 ── */
+.content-section { padding: 32px 0; }
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+.section-card h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--edu-blue);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--edu-accent);
+}
+.section-card h2 i { margin-right: 8px; color: var(--edu-light); }
+.step-list { list-style: none; padding: 0; margin: 0; }
+.step-list li {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.88rem;
+}
+.step-list li:last-child { border-bottom: none; }
+.step-num {
+  background: var(--edu-light);
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 12px;
+  margin-top: 1px;
+}
+.os-tab .nav-link {
+  color: #555 !important;
+  font-size: 0.85rem;
+  padding: 8px 18px !important;
+  background: #f8f9fa;
+  border-radius: 0 !important;
+}
+.os-tab .nav-link.active {
+  background: var(--edu-blue) !important;
+  color: #fff !important;
+}
+.faq-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 14px 0;
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--edu-blue);
+  margin-bottom: 6px;
+}
+.faq-q i { margin-right: 6px; color: var(--edu-light); }
+.faq-a {
+  font-size: 0.83rem;
+  color: #555;
+  line-height: 1.6;
+  padding-left: 22px;
+}
+
+/* ── Footer ── */
+.main-footer {
+  background: var(--edu-blue);
+  color: rgba(255,255,255,0.6);
+  font-size: 0.78rem;
+  padding: 14px 24px;
+  text-align: center;
+}
+.main-footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+.main-footer a:hover { color: #fff; }
+.main-footer .divider { margin: 0 8px; }

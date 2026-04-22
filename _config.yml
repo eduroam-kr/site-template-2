@@ -1,0 +1,68 @@
+title: 샌드박스 eduroam
+description: 샌드박스연구소 eduroam 서비스 안내
+
+realm: sandbox.re.kr
+
+support:
+  email: helpdesk@sandbox.re.kr
+  tel: 042-000-0000
+baseurl: ""
+url: "https://eduroam.demo.kreonet.net"
+
+lang: ko
+
+t:
+  ko:
+    org: 샌드박스
+    support_dept: 샌드박스연구소 정보통신팀
+    nav_about: 소개
+    nav_connect: 접속 방법
+    nav_coverage: 이용 지역
+    nav_policy: 이용 정책
+    nav_support: 문의
+    footer_policy: 이용정책
+    footer_powered: Powered by
+    lang_name: 한국어
+  en:
+    org: Sandbox
+    support_dept: Sandbox Research Institute IT Team
+    nav_about: About
+    nav_connect: Connect
+    nav_coverage: Coverage
+    nav_policy: Policy
+    nav_support: Support
+    footer_policy: Policy
+    footer_powered: Powered by
+    lang_name: English
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      lang: ko
+  - scope:
+      path: "en"
+    values:
+      lang: en
+  - scope:
+      path: ""
+      type: notices
+    values:
+      layout: notice
+      lang: ko
+
+collections:
+  notices:
+    output: true
+    sort_by: date
+    permalink: /notices/:name/
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - .ruby-version

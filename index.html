@@ -1,0 +1,98 @@
+---
+layout: default
+title: 홈
+---
+
+<!-- Hero -->
+<section class="hero-section">
+  <div class="container">
+    <div class="eduroam-logo"><span>eduroam</span> @ {{ site.t[page.lang].org }}</div>
+    <div class="sub">전 세계 어디서나 기관 계정으로 무선랜에 접속하세요</div>
+    <a class="hero-btn" href="{{ '/connect/' | relative_url }}">
+      <i class="fas fa-wifi mr-1"></i>접속 방법 안내
+    </a>
+  </div>
+</section>
+
+<div class="container pb-4">
+
+  <!-- 퀵 카드 -->
+  <div class="row quick-cards">
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/connect/' | relative_url }}">
+        <div class="icon"><i class="fas fa-laptop"></i></div>
+        <div class="title">접속 방법</div>
+        <div class="desc">기기별 설정 가이드</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/coverage/' | relative_url }}">
+        <div class="icon"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="title">이용 지역</div>
+        <div class="desc">국내·외 접속 가능 지역</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/policy/' | relative_url }}">
+        <div class="icon"><i class="fas fa-file-alt"></i></div>
+        <div class="title">이용 정책</div>
+        <div class="desc">사용 규정 및 약관</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/support/' | relative_url }}">
+        <div class="icon"><i class="fas fa-headset"></i></div>
+        <div class="title">문의</div>
+        <div class="desc">문제 해결 및 도움말</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+
+    <!-- 공지사항 -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-bullhorn"></i>공지사항
+          <a href="#" class="float-right" style="font-size:0.78rem; color:#888; font-weight:400;">전체보기</a>
+        </div>
+        <div class="card-body p-0">
+          <ul class="notice-list">
+            {% assign notices = site.notices | sort: "date" | reverse %}
+            {% for notice in notices limit:5 %}
+            <li>
+              <span>{% if notice.is_new %}<span class="badge-new">NEW</span>{% endif %}<a href="{{ notice.url | relative_url }}" style="color:inherit; text-decoration:none;">{{ notice.title_ko }}</a></span>
+              <span class="date">{{ notice.date | date: "%Y.%m.%d" }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 빠른 도움말 -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header"><i class="fas fa-question-circle"></i>빠른 도움말</div>
+        <div class="card-body p-0">
+          <ul class="help-list">
+            <li onclick="location.href='{{ '/connect/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>처음 사용 설정 방법
+            </li>
+            <li onclick="location.href='{{ '/support/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>비밀번호를 잊었어요
+            </li>
+            <li onclick="location.href='{{ '/coverage/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>해외에서 접속하기
+            </li>
+            <li onclick="location.href='{{ '/support/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>인증서 오류 해결
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

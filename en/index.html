@@ -1,0 +1,98 @@
+---
+layout: default
+title: Home
+---
+
+<!-- Hero -->
+<section class="hero-section">
+  <div class="container">
+    <div class="eduroam-logo"><span>eduroam</span> @ Sandbox Research Institute</div>
+    <div class="sub">Connect to Wi-Fi worldwide with your institutional account</div>
+    <a class="hero-btn" href="{{ '/en/connect/' | relative_url }}">
+      <i class="fas fa-wifi mr-1"></i>How to Connect
+    </a>
+  </div>
+</section>
+
+<div class="container pb-4">
+
+  <!-- Quick Cards -->
+  <div class="row quick-cards">
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/en/connect/' | relative_url }}">
+        <div class="icon"><i class="fas fa-laptop"></i></div>
+        <div class="title">Connect</div>
+        <div class="desc">Setup guide by device</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/en/coverage/' | relative_url }}">
+        <div class="icon"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="title">Coverage</div>
+        <div class="desc">Domestic &amp; international locations</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/en/policy/' | relative_url }}">
+        <div class="icon"><i class="fas fa-file-alt"></i></div>
+        <div class="title">Policy</div>
+        <div class="desc">Terms of use</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <a class="quick-card" href="{{ '/en/support/' | relative_url }}">
+        <div class="icon"><i class="fas fa-headset"></i></div>
+        <div class="title">Support</div>
+        <div class="desc">Help &amp; troubleshooting</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+
+    <!-- Notices -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-bullhorn"></i>Notices
+          <a href="#" class="float-right" style="font-size:0.78rem; color:#888; font-weight:400;">View all</a>
+        </div>
+        <div class="card-body p-0">
+          <ul class="notice-list">
+            {% assign notices = site.notices | sort: "date" | reverse %}
+            {% for notice in notices limit:5 %}
+            <li>
+              <span>{% if notice.is_new %}<span class="badge-new">NEW</span>{% endif %}<a href="{{ notice.url | relative_url }}" style="color:inherit; text-decoration:none;">{{ notice.title_en }}</a></span>
+              <span class="date">{{ notice.date | date: "%Y.%m.%d" }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Help -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header"><i class="fas fa-question-circle"></i>Quick Help</div>
+        <div class="card-body p-0">
+          <ul class="help-list">
+            <li onclick="location.href='{{ '/en/connect/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>First-time setup
+            </li>
+            <li onclick="location.href='{{ '/en/support/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>Forgot my password
+            </li>
+            <li onclick="location.href='{{ '/en/coverage/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>Connecting abroad
+            </li>
+            <li onclick="location.href='{{ '/en/support/' | relative_url }}'">
+              <i class="fas fa-chevron-right"></i>Certificate error fix
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

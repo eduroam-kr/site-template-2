@@ -1,0 +1,64 @@
+---
+layout: default
+title: 소개
+---
+
+<section class="page-hero">
+  <div class="container">
+    <h1><i class="fas fa-info-circle mr-2"></i>eduroam 소개</h1>
+    <p class="page-sub">{{ site.t[page.lang].org }} eduroam 서비스에 대해 안내합니다</p>
+  </div>
+</section>
+
+<div class="container content-section">
+
+  <div class="section-card">
+    <h2><i class="fas fa-globe"></i>eduroam이란?</h2>
+    <p style="font-size:0.9rem; color:#444; line-height:1.8;">
+      <strong><a href="https://eduroam.org" target="_blank">eduroam</a></strong>(에듀롬, education roaming)은 대학·연구기관·공공기관이 참여하는 국제 무선랜 로밍 서비스입니다.
+      자신의 소속 기관 계정 하나로 전 세계 참여 기관의 Wi-Fi에 별도 가입이나 비용 없이 접속할 수 있습니다.
+    </p>
+    <p style="font-size:0.9rem; color:#444; line-height:1.8;">
+      현재 100개 이상의 국가, 수천 개의 기관이 참여하고 있으며, 국내에서는 <a href="https://eduroam.kreonet.net" target="_blank">eduroamKR</a>을 통해 한국과학기술정보연구원(KISTI)의 <a href="https://kreonet.net/eng" target="_blank">국가과학기술연구망(KREONET)</a>에서 운영하고 있습니다.
+    </p>
+  </div>
+
+  <div class="section-card">
+    <h2><i class="fas fa-building"></i>{{ site.t[page.lang].org }} eduroam</h2>
+    <p style="font-size:0.9rem; color:#444; line-height:1.8;">
+      {{ site.t[page.lang].org }}는 eduroamKR에 가입된 기관으로, 소속 구성원에게 기관 내 및 전 세계 eduroam 참여 기관에서 무선랜 접속 서비스를 제공합니다.
+    </p>
+    <ul style="font-size:0.9rem; color:#444; line-height:2;">
+      <li>기관 내 eduroam AP 설치 및 운영</li>
+      <li>구성원 계정 기반 인증(802.1X / WPA2-Enterprise)</li>
+      <li>국내·외 eduroam 로밍 지원</li>
+      <li>eduroam CAT(자동 설정 도구) 제공</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h2><i class="fas fa-shield-alt"></i>보안 및 인증</h2>
+    <p style="font-size:0.9rem; color:#444; line-height:1.8;">
+      eduroam은 WPA2-Enterprise(EAP) 기술을 사용하여 사용자 인증 정보를 암호화합니다.
+      인증은 소속 기관 RADIUS 서버에서 처리되며, 비밀번호는 외부 기관에 전달되지 않습니다.
+    </p>
+    <div class="row mt-3">
+      <div class="col-md-4 text-center mb-3">
+        <div style="font-size:2rem; color:var(--edu-light);"><i class="fas fa-lock"></i></div>
+        <div style="font-weight:700; font-size:0.85rem; margin-top:8px;">WPA2-Enterprise</div>
+        <div style="font-size:0.78rem; color:#888;">강력한 무선 암호화</div>
+      </div>
+      <div class="col-md-4 text-center mb-3">
+        <div style="font-size:2rem; color:var(--edu-light);"><i class="fas fa-user-shield"></i></div>
+        <div style="font-weight:700; font-size:0.85rem; margin-top:8px;">기관 인증</div>
+        <div style="font-size:0.78rem; color:#888;">소속 기관 계정으로만 접속</div>
+      </div>
+      <div class="col-md-4 text-center mb-3">
+        <div style="font-size:2rem; color:var(--edu-light);"><i class="fas fa-certificate"></i></div>
+        <div style="font-weight:700; font-size:0.85rem; margin-top:8px;">인증서 검증</div>
+        <div style="font-size:0.78rem; color:#888;">가짜 AP 방지</div>
+      </div>
+    </div>
+  </div>
+
+</div>
