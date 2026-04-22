@@ -57,6 +57,12 @@ collections:
     sort_by: date
     permalink: /notices/:name/
 
+include:
+  - general
+
+keep_files:
+  - general
+
 cert:
   ca:
     cn: "Sandbox Research Institute eduroam Root CA"
