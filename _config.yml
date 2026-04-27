@@ -23,6 +23,10 @@ t:
     footer_policy: 이용정책
     footer_powered: Powered by
     lang_name: 한국어
+    theme_label: 테마
+    theme_system: 시스템
+    theme_light: 라이트
+    theme_dark: 다크
   en:
     org: Sandbox
     support_dept: Sandbox Research Institute IT Team
@@ -34,6 +38,10 @@ t:
     footer_policy: Policy
     footer_powered: Powered by
     lang_name: English
+    theme_label: Theme
+    theme_system: System
+    theme_light: Light
+    theme_dark: Dark
 
 defaults:
   - scope:

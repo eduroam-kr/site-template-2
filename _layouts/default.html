@@ -14,6 +14,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <title>{% if page.title %}{{ page.title }} | {% endif %}{{ t.org }} eduroam</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,12 +41,24 @@
   <link rel="icon" type="image/png" sizes="16x16"   href="{{ '/assets/icons/favicon-16x16.png' | relative_url }}">
 
   {% seo %}
+
+  <script>
+    // 테마 깜빡임 방지: 페이지 렌더 직전에 저장된 선택을 적용
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme'); // 'system' | 'light' | 'dark' | null
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) { /* localStorage 사용 불가 시 시스템 설정 따름 */ }
+    })();
+  </script>
 </head>
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
 
   <!-- ══ Navbar ══ -->
-  <nav class="main-header navbar navbar-expand-md navbar-dark">
+  <nav class="main-header navbar navbar-expand-lg navbar-dark">
     <div class="container">
       <a href="{{ base | append: '/' | relative_url }}" class="navbar-brand">
         <i class="fas fa-wifi mr-1"></i>
@@ -79,6 +93,23 @@
             <a class="nav-link{% if page.url contains '/support' %} active{% endif %}" href="{{ base | append: '/support/' | relative_url }}">
               <i class="fas fa-headset"></i>{{ t.nav_support }}
             </a>
+          </li>
+          <!-- 테마 전환 -->
+          <li class="nav-item dropdown ml-1">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" style="padding:0.5rem 0.7rem !important;" title="{{ t.theme_label }}">
+              <i class="fas fa-circle-half-stroke"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" data-theme-choice="system">
+                <i class="fas fa-circle-half-stroke fa-fw mr-1"></i>{{ t.theme_system }}
+              </a>
+              <a class="dropdown-item" href="#" data-theme-choice="light">
+                <i class="fas fa-sun fa-fw mr-1"></i>{{ t.theme_light }}
+              </a>
+              <a class="dropdown-item" href="#" data-theme-choice="dark">
+                <i class="fas fa-moon fa-fw mr-1"></i>{{ t.theme_dark }}
+              </a>
+            </div>
           </li>
           <!-- 언어 전환 -->
           <li class="nav-item dropdown ml-1">
@@ -120,5 +151,41 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+<script>
+  // 테마 드롭다운 — 선택을 localStorage에 저장하고 즉시 반영
+  (function () {
+    var html = document.documentElement;
+    var items = document.querySelectorAll('[data-theme-choice]');
+
+    function getCurrent() {
+      try { return localStorage.getItem('theme') || 'system'; } catch (e) { return 'system'; }
+    }
+
+    function setActive(choice) {
+      items.forEach(function (el) {
+        el.classList.toggle('active', el.dataset.themeChoice === choice);
+      });
+    }
+
+    function apply(choice) {
+      if (choice === 'light' || choice === 'dark') {
+        html.setAttribute('data-theme', choice);
+      } else {
+        html.removeAttribute('data-theme');
+      }
+      try { localStorage.setItem('theme', choice); } catch (e) {}
+      setActive(choice);
+    }
+
+    setActive(getCurrent());
+
+    items.forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        apply(el.dataset.themeChoice);
+      });
+    });
+  })();
+</script>
 </body>
 </html>
