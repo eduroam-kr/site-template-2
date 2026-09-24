@@ -7,7 +7,7 @@ support:
   email: helpdesk@sandbox.re.kr
   tel: 042-000-0000
 baseurl: ""
-url: "https://eduroam.demo.kreonet.net"
+url: "https://eduroam-site-dev.kreonet.net"
 
 lang: ko
 
