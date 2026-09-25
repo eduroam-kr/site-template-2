@@ -26,7 +26,7 @@ AdminLTE·jQuery 제거했고 되돌리기용 `!important` 도 전부 사라졌�
 
 측정으로 잡힌 함정 하나: navbar 가 `data-bs-theme="dark"` 를 달고 있어서, 토큰 블록을 `[data-bs-theme="dark"]` 로 쓰면 navbar 안에서 *역할만* 다크로 바뀌고 Radix 스케일(`.dark-theme`, html 에만 있음)은 라이트인 상태가 된다 → 흰 바탕에 흰 글씨. `:root[data-bs-theme="dark"]` 로 한정해서 해결.
 
-### T-0003 — Radix Colors 토큰 도입 `DONE`
+### T-0003 — Radix 토큰 도입 `DONE`
 
 `slate` / `blue` 의 라이트·다크 CSS 를 `assets/css/vendor/` 에 받아 커밋하고, `:root` 와 `[data-bs-theme="dark"]` 에서 Bootstrap 시맨틱 변수로 매핑한다 (매핑표는 ADR-0002).
 
@@ -36,7 +36,9 @@ AdminLTE·jQuery 제거했고 되돌리기용 `!important` 도 전부 사라졌�
 
 - 솔리드 강조색에 `blue-9` 를 쓰면 흰 글자 기준 **3.26** 이라 작은 글자에서 AA 미달이다. `blue-11` + 흰 글자 = **4.77** 로 바꿨다. 다크에서는 `blue-11` 이 밝은 색(`#70b8ff`)이라 글자를 `slate-1` 로 뒤집는다 (**8.97**).
 - 기존 히어로 그라디언트의 밝은 끝 `#0080cc` 는 **흰 글자조차 4.23** 이었다. 손으로 고른 색이라 그렇다. `blue-12 → 브랜드 네이비` 로 바꿔 전 구간 10.78 이상이 됐다.
-- navbar 의 `brand-edu` 강조색은 라이트(네이비 위) `blue-7` = 6.03, 다크(slate-2 위) `blue-11` = 8.37. 한 값으로는 양쪽을 못 맞춰서 `--brand-edu` 토큰으로 갈랐다.
+- navbar 의 `brand-edu` 강조색은 라이트(네이비 위) `blue-7` = 6.03, 다크(slate-2 위) `blue-11` = 8.37. 한 값으로는 양쪽을 못 맞췄다.
+
+**이 계산들이 전부 필요 없어졌다.** Radix *Colors* 는 스케일만 주므로 "몇 번을 어디에"를 사람이 정해야 했고, 위 세 건 모두 그 판단이 틀렸던 사례다. `@radix-ui/themes` 의 `tokens.css` 로 옮기면서 `--accent-contrast` 가 그 판단을 대신한다. `main.css` 의 hex·rgba 는 0개가 됐다. ADR-0004 참고.
 
 ### T-0004 — 인라인 색상 제거 `DONE`
 

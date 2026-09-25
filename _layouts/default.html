@@ -10,7 +10,8 @@
   {% assign en_url = '/en' | append: page.url %}
 {% endif %}
 <!DOCTYPE html>
-<html lang="{{ page.lang }}">
+<html lang="{{ page.lang }}" class="radix-themes"
+      data-accent-color="{{ site.theme.accent }}" data-gray-color="{{ site.theme.gray }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ '/assets/css/vendor/radix-colors.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/vendor/radix-themes-tokens.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
   <link rel="shortcut icon" href="{{ '/assets/icons/favicon.ico' | relative_url }}" type="image/x-icon">
@@ -45,7 +46,7 @@
 
   <script>
     // 테마 깜빡임 방지 — 첫 페인트 전에 저장된 선택을 적용한다.
-    // data-bs-theme 는 Bootstrap 5.3 컴포넌트용, .dark-theme 는 Radix 다크 스케일용.
+    // data-bs-theme 는 Bootstrap 5.3 컴포넌트용, .dark-theme 는 Radix 토큰용.
     // 둘은 항상 같이 움직인다 (아래 토글 스크립트의 applyTheme 과 같은 규칙).
     (function () {
       var stored = null;

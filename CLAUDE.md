@@ -46,24 +46,48 @@ eduroamKR NRO 사이트 개편 작업 저장소. Jekyll 정적 사이트이고, 
 
 ## 테마 (라이트 / 다크)
 
-3단 전환이다 — 시스템 / 라이트 / 다크. 선택은 `localStorage['theme']` 에 저장하고, `<head>` 안 인라인 스크립트가 렌더 직전에 `<html data-theme>` 를 세팅해서 깜빡임(FOUC)을 막는다. 이 스크립트는 반드시 `<head>` 안에, 스타일시트보다 뒤·본문보다 앞에 있어야 한다. 아래로 내리지 않는다.
+Bootstrap 5.3 의 color modes + Radix **Themes** 토큰. 결정 배경은 [prj/ADR.md](prj/ADR.md) 의 ADR-0001, ADR-0004.
 
-색은 `assets/css/main.css` 의 CSS 변수로만 쓴다. 변수는 세 군데에 정의된다:
+**`assets/css/main.css` 에 hex 나 rgba 가 하나도 없다. 이 상태를 유지한다.** 색이 필요하면 `assets/css/vendor/radix-themes-tokens.css` 의 토큰을 참조한다. 그 파일은 업스트림 그대로이고 손으로 고치지 않는다 (재생성 명령이 파일 머리에 있다).
 
-1. `:root` — 라이트. 모든 변수의 기본값은 **반드시** 여기 있어야 한다.
-2. `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { … } }` — 시스템이 다크일 때. `:not([data-theme="light"])` 가 "라이트 수동 선택"이 시스템 설정을 이기게 하는 장치다.
-3. `[data-theme="dark"] { … }` — 다크 수동 선택.
+자주 쓰는 토큰:
 
-새 색을 추가하면 **세 군데를 같이** 고친다. 어느 한 곳에만 정의된 색은 어떤 조합에서 반드시 깨진다.
+| 토큰 | 뜻 |
+|---|---|
+| `--color-background` | 페이지 배경 |
+| `--color-panel-solid` | 카드·패널 면 |
+| `--accent-9` | 솔리드 강조 면 |
+| `--accent-contrast` | **그 면 위에 올려도 되는 글자색** |
+| `--accent-11` | 배경 위 강조 텍스트 |
+| `--gray-12` / `--gray-11` | 본문 / 보조 텍스트 |
+| `--gray-6` / `--gray-4` | 테두리 / 옅은 구분선 |
+| `--shadow-1..6`, `--radius-1..6` | 그림자, 모서리 |
 
-- **HTML 에 색을 인라인으로 박지 않는다.** `style="color:#333"` 은 다크에서 검은 글씨로 남는다. 기존 코드에 남아 있는 인라인 색(`_layouts/notice.html`, `index.html` 의 `#888` / `#333` 등)은 보이는 대로 변수로 옮긴다 — `prj/NOTES.md` 의 OBS-20260925-03 참고.
-- AdminLTE 3.2.0 이 `.wrapper` / `.content-wrapper` 에 자기 배경을 박아두기 때문에 `main.css` 에서 `!important` 로 덮고 있다. 이 `!important` 들은 의도된 것이니 "정리"하지 않는다.
+`main.css` 의 `:root` 블록은 이 토큰들에 역할 이름을 붙인 것뿐이다 (`--surface-card: var(--color-panel-solid)`). 다크용 재정의는 `color-scheme` 외에 거의 없다 — Radix 가 `.dark-theme` 에서 이미 전부 바꾼다.
+
+지켜야 할 것들:
+
+- **솔리드 면 위 글자색을 직접 고르지 않는다.** `--accent-9` 배경에는 `--accent-contrast` 를 쓴다. 이 쌍만 보장된다. 배경을 `--accent-10` 으로 옮기는 순간 보장이 깨진다 — 실제로 다크에서 4.28 이 나왔다.
+- **강조색을 바꾸려면 `_config.yml` 의 `theme.accent` 를 바꾼다.** CSS 를 열지 않는다. 26종 중에서 고른다. `theme.gray` 는 gray / mauve / olive / sage / sand / slate.
+- **테마 적용은 두 가지를 같이 건다.** `<html>` 의 `data-bs-theme` 속성(Bootstrap 컴포넌트용)과 `.dark-theme` 클래스(Radix 토큰용). `_layouts/default.html` 의 `<head>` 인라인 스크립트와 본문 끝 토글 스크립트가 같은 규칙으로 처리한다. 한쪽만 바꾸면 테마가 반쪽만 바뀐다. 인라인 스크립트는 첫 페인트 전에 돌아야 하므로 `<head>` 밖으로 내리지 않는다. `<html>` 의 `radix-themes` 클래스도 지운다 — 시맨틱 토큰이 `:where(.radix-themes)` 아래 있어서, 없으면 `--color-background` 부터 사라진다.
+- **`light-dark()` 를 쓰지 않는다.** Chromium 123 / Safari 17.5 이상이라 구버전 Samsung Internet 에서 동작하지 않는다. 이 개편의 출발점이 삼성 단말 다크 이슈인데 정작 삼성 브라우저에서 안 먹는 문법을 쓰면 본말전도다.
+- **HTML 에 색을 인라인으로 박지 않는다.** 한 번 90곳을 걷어냈다. 색이 필요하면 `text-body` / `text-body-secondary` / `text-accent` 를 쓴다.
+- **그라디언트를 새로 만들지 않는다.** 자동 검사가 그라디언트 위 텍스트의 명암비를 계산하지 못해서 사각지대가 된다. 지금은 사각지대가 0종이다.
+
+**검증은 렌더해서 한다.** Playwright 로 폰(360) · 태블릿(820) · 데스크탑(1280) × 라이트/다크 × 7페이지를 돌며 계산된 색으로 명암비와 가로 스크롤을 잰다. 색을 건드렸으면 돌리고 0건인지 본다. 짐작하지 않는다.
+
+## 반응형
+
+`main.css` 에 한때 화면 폭 미디어 쿼리가 하나도 없었다. 그리드 클래스는 열 배치만 바꾸므로 여백과 타이포는 아무도 안 보고 있었다. 지금은 `max-width: 767.98px` 구간에서 패딩과 폰트를 줄인다.
+
+- **`word-break: keep-all` 을 지운다면 이유를 적는다.** 한국어에서 이게 없으면 "프로파/일", "비/밀번호" 처럼 어절 중간에서 끊긴다. 좁은 화면 완성도 차이가 가장 큰 한 줄이다.
+- 인증서 지문처럼 끊기면 안 되는 문자열은 `.fingerprint` 를 쓰고 `<wbr>` 로 끊을 자리를 지정한다 (`| replace: ":", ":<wbr>"`). `word-break: break-all` 을 쓰지 않는다 — 옥텟 한가운데서 끊긴다.
 
 ## 사이트 설정은 `_config.yml` 한 곳에
 
 기관명, realm, 연락처, 인증서 지문, UI 문자열 — 바뀔 수 있는 값은 전부 `_config.yml` 에 있고 페이지는 거기서 읽는다. 페이지에 값을 직접 쓰면 fork 한 기관이 그 값을 찾지 못한다.
 
-**`url:` 은 CNAME 과 반드시 같아야 한다.** `_layouts/default.html` 이 `main.css` 를 `absolute_url` 로 걸기 때문에, `url:` 이 실제 도메인과 다르면 스타일시트를 엉뚱한 도메인에서 불러온다. 도메인을 바꿀 때는 `CNAME` 과 `_config.yml` 의 `url:` 을 같은 커밋에서 바꾼다.
+**`url:` 은 CNAME 과 같게 유지한다.** 도메인을 바꿀 때 `CNAME` 과 `_config.yml` 의 `url:` 을 같은 커밋에서 바꾼다. 에셋 링크는 전부 `relative_url` 이라 예전처럼 CSS 가 통째로 다른 도메인에서 로드되는 일은 없지만, `url:` 은 sitemap·feed·SEO 태그의 절대 주소를 만든다.
 
 ## eduroam 참여기관 메타데이터 (`general/institution.xml`)
 
@@ -104,20 +128,24 @@ openssl x509 -in assets/certs/sandbox_ca.pem -noout -fingerprint -sha256 -dates
 
 현재 공지 **본문**은 언어 구분 없이 한국어 하나뿐이고 `/en/notices/` 자체가 없다. `nro-site` 는 `_notices_en/` + `_layouts/notice_en.html` 로 풀었다. 개편에서 어느 쪽으로 갈지는 결정 사항이다 — `prj/NOTES.md` 의 OBS-20260925-01, 02 참고.
 
-## 로컬 개발의 한계
+## 로컬 개발
 
-**이 머신에서는 지금 빌드가 안 된다.** 시스템 Ruby 가 2.6.10 이고 `Gemfile` 의 jekyll 4.3 은 Ruby 3.0 이상을 요구한다 (`.ruby-version` 은 3.1.3). rbenv / asdf / Homebrew Ruby 어느 것도 설치되어 있지 않다.
-
-그러니 **빌드나 렌더를 확인했다고 쓰지 않는다.** 확인하지 않은 것은 확인하지 않았다고 말한다. Ruby 3.1 을 깔기 전까지 로컬에서 할 수 있는 검증은 이 정도다:
-
-- Liquid 태그 짝 맞추기, front matter YAML 문법 — 눈으로.
-- `python3 -c 'import xml.dom.minidom,sys; xml.dom.minidom.parse(sys.argv[1])' general/institution.xml` — XML well-formed 확인.
-- `ruby -ryaml -e 'YAML.load_file("_config.yml")'` — 시스템 Ruby 로도 되는 YAML 문법 확인.
-
-빌드 결과가 꼭 필요하면 push 해서 Actions 로그를 보는 것보다 로컬에 Ruby 3.1 을 까는 쪽이 빠르다.
+Ruby 3.3 (`.ruby-version`, Actions 워크플로와 같은 값) 에서 빌드한다. Homebrew 로 깔았고 keg-only 라 PATH 를 잡아야 한다.
 
 ```sh
-bundle install && bundle exec jekyll serve   # Ruby 3.1+ 필요
+export PATH="/usr/local/opt/ruby@3.3/bin:$PATH"
+bundle install
+bundle exec jekyll serve --port 4321
+```
+
+Ruby 3.1 로 되돌리지 않는다 — Homebrew 에서 2026-05-07 에 비활성화됐다 (upstream EOL).
+
+`Gemfile.lock` 은 커밋되어 있고 `x86_64-linux` 플랫폼이 들어 있다. "로컬에서 본 것 == 배포되는 것"이 성립해야 하므로, gem 을 올렸으면 lock 도 같이 커밋한다.
+
+`general/institution.xml` 은 빌드와 무관하게 따로 검증한다.
+
+```sh
+python3 -c 'import xml.dom.minidom,sys; xml.dom.minidom.parse(sys.argv[1])' general/institution.xml
 ```
 
 ## 배포
@@ -129,7 +157,9 @@ bundle install && bundle exec jekyll serve   # Ruby 3.1+ 필요
 
 ## 외부 의존성
 
-jQuery 3.6.0, Bootstrap 4.6.2, AdminLTE 3.2.0, Font Awesome 6.5.0 는 cdnjs 에서, Noto Sans KR 은 Google Fonts 에서 런타임에 불러온다. 즉 **CDN 이 죽으면 사이트 레이아웃이 무너진다.** `nro-site` 는 이걸 vendor 정적 자산을 커밋하는 쪽으로 이미 해결했다. 이 저장소도 그렇게 갈지는 결정 사항이고, 결정하면 `prj/ADR.md` 에 적는다. 그 전까지 **새 CDN 의존을 추가하지 않는다** — 되돌릴 때 비용이 는다.
+런타임에 불러오는 것은 셋뿐이다 — Bootstrap 5.3.8 과 Font Awesome 6.5.0 은 cdnjs 에서, Noto Sans KR 은 Google Fonts 에서. jQuery 와 AdminLTE 는 걷어냈다. Radix Themes 토큰은 CDN 이 아니라 `assets/css/vendor/` 에 커밋되어 있다.
+
+**새 CDN 의존을 추가하지 않는다.** CDN 이 죽으면 레이아웃이 무너진다. `nro-site` 는 vendor 정적 자산을 커밋하는 쪽으로 이미 해결했고, 이 저장소도 그렇게 갈지는 아직 결정 사항이다 — 결정하면 `prj/ADR.md` 에 적는다.
 
 버전은 URL 에 정확히 박아 쓴다. `latest` 나 범위 지정을 쓰지 않는다.
 

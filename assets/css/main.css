@@ -1,66 +1,58 @@
 /* ============================================================
    eduroam 안내 사이트 — Bootstrap 5.3 위의 사이트 스타일
 
-   색은 전부 Radix Colors 스케일에서 온다 (vendor/radix-colors.css).
-   여기서는 "역할 → 스케일 단계" 매핑만 하고, 아래 컴포넌트 규칙은
-   역할 토큰만 참조한다. hex 를 직접 쓰지 않는다.
+   색은 한 개도 여기서 고르지 않는다. 전부 Radix Themes 토큰
+   (vendor/radix-themes-tokens.css) 에서 온다. 이 파일에 hex 가 하나라도
+   생기면 그건 되돌려야 할 변경이다.
 
-   라이트/다크 구조:
-     - 스케일 값 자체는 Radix 가 .dark-theme 에서 통째로 갈아끼운다.
-       그래서 대부분의 역할은 여기서 한 번만 정의하면 양쪽에서 맞는다.
-     - 다크에서 *역할이 달라지는 것*만 :root[data-bs-theme="dark"] 에 다시 쓴다.
-       :root 로 한정하는 이유는 navbar 가 자기 스코프에 data-bs-theme="dark" 를
-       달고 있기 때문이다. 한정하지 않으면 navbar 안에서 역할만 다크로 바뀌고
-       스케일 값은 라이트인 상태가 되어 흰 바탕에 흰 글씨가 된다.
-       (예: 라이트는 페이지 slate-2 / 카드 slate-1 로 카드가 더 밝고,
-        다크는 페이지 slate-1 / 카드 slate-2 로 카드가 더 밝다 — 뒤집힌다.)
-     - light-dark() 는 쓰지 않는다. 구버전 Samsung Internet 미지원. (ADR-0002)
+   Radix Themes 는 스케일뿐 아니라 시맨틱 층까지 준다:
+     --color-background   페이지 배경 (라이트/다크 자동)
+     --color-panel-solid  카드·패널 면
+     --accent-9           솔리드 강조 면
+     --accent-contrast    그 면 위에 올려도 되는 글자색  ← 직접 고르지 않는다
+     --gray-11 / --gray-12  보조 텍스트 / 본문 텍스트
+     --shadow-1..6, --radius-1..6
+
+   그래서 아래 :root 블록은 "역할 → 토큰" 별명 붙이기일 뿐이고,
+   다크용 재정의가 거의 없다 — Radix 가 .dark-theme 에서 이미 다 바꾼다.
+
+   강조색은 _config.yml 의 theme.accent 하나로 바뀐다 (26종).
+   light-dark() 는 쓰지 않는다 — 구버전 Samsung Internet 미지원. (ADR-0002)
    ============================================================ */
 
 /* ── 1. 역할 토큰 ───────────────────────────────────────── */
 
 :root {
-  color-scheme: light;
+  --surface-page:   var(--color-background);
+  --surface-card:   var(--color-panel-solid);
+  --surface-sunken: var(--gray-3);
+  --surface-hover:  var(--accent-3);
 
-  /* eduroam 브랜드 네이비 — 라이트 navbar/히어로의 면 색으로만 쓴다.
-     글자색으로 쓰면 다크 카드 위 명암비 1.43 이라 못 읽는다. (ADR-0002) */
-  --edu-navy: #003d7a;
+  --line:        var(--gray-6);
+  --line-subtle: var(--gray-4);
 
-  --surface-page:   var(--slate-2);
-  --surface-card:   var(--slate-1);
-  --surface-sunken: var(--slate-3);
-  --surface-hover:  var(--blue-3);
+  --text:        var(--gray-12);
+  --text-muted:  var(--gray-11);
+  --text-accent: var(--accent-11);
 
-  --line:        var(--slate-6);
-  --line-subtle: var(--slate-4);
+  --accent-solid:       var(--accent-9);
+  --accent-solid-hover: var(--accent-10);
+  --on-accent:          var(--accent-contrast);
 
-  --text:        var(--slate-12);
-  --text-muted:  var(--slate-11);
-  --text-accent: var(--blue-11);
+  /* navbar·히어로·푸터는 양쪽 테마에서 같은 솔리드를 쓴다. Radix 가 accent-9 와
+     accent-contrast 를 쌍으로 보장하므로 테마별 분기가 필요 없다. */
+  --nav-bg:     var(--accent-9);
+  --nav-fg:     var(--accent-contrast);
+  --nav-border: var(--accent-10);
 
-  /* blue-11 + #fff = 4.77. blue-9 는 흰 글자 기준 3.26 이라 작은 글자에 못 쓴다. */
-  --accent-solid:       var(--blue-11);
-  --accent-solid-hover: var(--blue-12);
-  --on-accent: #fff;
+  --shadow:       var(--shadow-3);
+  --shadow-sm:    var(--shadow-2);
+  --shadow-hover: var(--shadow-4);
 
-  --nav-bg:     var(--edu-navy);
-  --nav-border: var(--blue-9);
-  /* 네이비 → blue-12 로 살짝 깊어지는 정도만. 원래 쓰던 #0055aa/#0080cc 로 가는
-     그라디언트는 밝은 끝에서 흰 글자조차 4.23 이라 못 쓴다 (측정값). */
-  --hero-bg: linear-gradient(135deg, var(--blue-12) 0%, var(--edu-navy) 100%);
-  --hero-text: #fff;
-  --hero-text-muted: rgba(255, 255, 255, 0.85);
-  /* navbar·히어로의 어두운 면 위에 올라가는 브랜드 강조색 */
-  --brand-edu: var(--blue-7);
+  --radius:    var(--radius-4);
+  --radius-sm: var(--radius-3);
 
-  --shadow:       0 2px 12px rgba(0, 0, 0, 0.08);
-  --shadow-sm:    0 1px 8px rgba(0, 0, 0, 0.07);
-  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.12);
-
-  --radius:    10px;
-  --radius-sm: 8px;
-
-  /* Bootstrap 컴포넌트(alert, nav-tabs, badge, dropdown…)가 따라오게 한다 */
+  /* Bootstrap 컴포넌트(alert, nav-tabs, dropdown, badge…)가 따라오게 한다 */
   --bs-body-bg: var(--surface-page);
   --bs-body-color: var(--text);
   --bs-secondary-color: var(--text-muted);
@@ -68,35 +60,14 @@
   --bs-border-color: var(--line);
   --bs-emphasis-color: var(--text);
   --bs-link-color: var(--text-accent);
-  --bs-link-hover-color: var(--blue-12);
+  --bs-link-hover-color: var(--accent-12);
   --bs-font-sans-serif: 'Noto Sans KR', system-ui, -apple-system, sans-serif;
 }
 
-:root[data-bs-theme="dark"] {
-  color-scheme: dark;
-
-  /* 다크에서 뒤집히는 역할만 */
-  --surface-page:   var(--slate-1);
-  --surface-card:   var(--slate-2);
-  --surface-sunken: var(--slate-3);
-
-  /* 채도 높은 네이비 블록이 어두운 페이지 위에 떠 보이지 않게 가라앉힌다 */
-  --nav-bg:     var(--slate-2);
-  --nav-border: var(--slate-6);
-  --hero-bg: linear-gradient(135deg, var(--slate-2) 0%, var(--slate-4) 100%);
-  --hero-text: var(--slate-12);
-  --hero-text-muted: var(--slate-11);
-  /* 다크 navbar(slate-2) 위에서 blue-7 은 2.57 이라 못 읽는다 → blue-11 (8.37) */
-  --brand-edu: var(--blue-11);
-
-  /* 다크의 blue-11 은 밝은 색이므로 그 위 글자는 어두워야 한다 (8.97) */
-  --on-accent: var(--slate-1);
-
-  /* 어두운 배경에서 그림자는 보이지 않는다. 경계는 테두리가 만든다. */
-  --shadow:       0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.5);
-}
+/* color-scheme 은 명시해야 스크롤바·폼 컨트롤이 선택한 테마를 따른다.
+   OS 가 다크인데 사용자가 라이트를 골랐을 때 특히. (T-0005) */
+:root[data-bs-theme="light"] { color-scheme: light; }
+:root[data-bs-theme="dark"]  { color-scheme: dark; }
 
 /* ── 2. 베이스 ──────────────────────────────────────────── */
 
@@ -133,27 +104,29 @@ code { color: var(--bs-link-hover-color); }
   padding-block: 0.4rem;
 }
 .main-header .navbar-brand {
-  color: #fff;
+  color: var(--nav-fg);
   font-weight: 700;
   font-size: 1.05rem;
   letter-spacing: -0.3px;
 }
-.main-header .navbar-brand .brand-edu { color: var(--brand-edu); }
+.main-header .navbar-brand .brand-edu { color: var(--accent-contrast); opacity: 0.75; }
 
 .main-header .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--nav-fg);
   font-size: 0.88rem;
   padding: 0.5rem 0.9rem;
-  border-radius: 4px;
   white-space: nowrap;
   background: none;
   border: 0;
 }
+/* 활성·hover 표시로 배경색을 바꾸지 않는다. accent-9 + accent-contrast 는 Radix 가
+   쌍으로 보장하는 조합이고, 배경을 accent-10 으로 옮기는 순간 그 보장이 깨진다
+   (다크에서 4.28 로 측정됨). 밑줄로 표시하면 색 조합은 그대로다. */
 .main-header .navbar-nav .nav-link:hover,
 .main-header .navbar-nav .nav-link:focus-visible,
 .main-header .navbar-nav .nav-link.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  color: var(--nav-fg);
+  box-shadow: inset 0 -2px 0 var(--nav-fg);
 }
 .main-header .navbar-nav .nav-link i { margin-right: 4px; }
 .main-header .nav-utility .nav-link { padding-inline: 0.7rem; }
@@ -163,8 +136,8 @@ code { color: var(--bs-link-hover-color); }
 
 .hero-section,
 .page-hero {
-  background: var(--hero-bg);
-  color: var(--hero-text);
+  background: var(--nav-bg);
+  color: var(--nav-fg);
 }
 .hero-section {
   padding: 52px 0 44px;
@@ -175,10 +148,11 @@ code { color: var(--bs-link-hover-color); }
   font-weight: 700;
   letter-spacing: -1px;
 }
-.hero-section .eduroam-logo span { color: var(--brand-edu); }
+.hero-section .eduroam-logo span { color: var(--accent-contrast); opacity: 0.75; }
 .hero-section .sub {
   font-size: 1rem;
-  color: var(--hero-text-muted);
+  color: var(--nav-fg);
+  opacity: 0.85;
   margin-top: 6px;
 }
 .hero-section .hero-btn {
@@ -209,7 +183,8 @@ code { color: var(--bs-link-hover-color); }
 }
 .page-hero .page-sub {
   font-size: 0.9rem;
-  color: var(--hero-text-muted);
+  color: var(--nav-fg);
+  opacity: 0.85;
   margin: 0;
 }
 
@@ -400,13 +375,13 @@ code { color: var(--bs-link-hover-color); }
   flex-shrink: 0;
   background: var(--nav-bg);
   border-top: 1px solid var(--nav-border);
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--nav-fg);
   font-size: 0.78rem;
   padding: 14px 24px;
   text-align: center;
 }
-.main-footer a { color: #fff; text-decoration: none; }
-.main-footer a:hover { text-decoration: underline; }
+.main-footer a { color: var(--nav-fg); text-decoration: underline; text-underline-offset: 2px; }
+.main-footer a:hover { opacity: 0.8; }
 .main-footer .divider { margin: 0 8px; opacity: 0.5; }
 
 /* ── 9. 반응형 ──────────────────────────────────────────── */
