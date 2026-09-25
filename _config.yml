@@ -27,6 +27,8 @@ t:
     theme_system: 시스템
     theme_light: 라이트
     theme_dark: 다크
+    nav_menu: 메뉴
+    lang_label: 언어
   en:
     org: Sandbox
     support_dept: Sandbox Research Institute IT Team
@@ -42,6 +44,8 @@ t:
     theme_system: System
     theme_light: Light
     theme_dark: Dark
+    nav_menu: Menu
+    lang_label: Language
 
 defaults:
   - scope:

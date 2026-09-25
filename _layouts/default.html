@@ -15,14 +15,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <meta name="supported-color-schemes" content="light dark">
   <title>{% if page.title %}{{ page.title }} | {% endif %}{{ t.org }} eduroam</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css">
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | absolute_url }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ '/assets/css/vendor/radix-colors.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
   <link rel="shortcut icon" href="{{ '/assets/icons/favicon.ico' | relative_url }}" type="image/x-icon">
   <link rel="icon" href="{{ '/assets/icons/favicon.ico' | relative_url }}" type="image/x-icon">
@@ -43,148 +44,152 @@
   {% seo %}
 
   <script>
-    // 테마 깜빡임 방지: 페이지 렌더 직전에 저장된 선택을 적용
+    // 테마 깜빡임 방지 — 첫 페인트 전에 저장된 선택을 적용한다.
+    // data-bs-theme 는 Bootstrap 5.3 컴포넌트용, .dark-theme 는 Radix 다크 스케일용.
+    // 둘은 항상 같이 움직인다 (아래 토글 스크립트의 applyTheme 과 같은 규칙).
     (function () {
-      try {
-        var saved = localStorage.getItem('theme'); // 'system' | 'light' | 'dark' | null
-        if (saved === 'light' || saved === 'dark') {
-          document.documentElement.setAttribute('data-theme', saved);
-        }
-      } catch (e) { /* localStorage 사용 불가 시 시스템 설정 따름 */ }
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (e) { /* 사생활 보호 모드 등 */ }
+      var resolved = (stored === 'light' || stored === 'dark')
+        ? stored
+        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-bs-theme', resolved);
+      document.documentElement.classList.toggle('dark-theme', resolved === 'dark');
     })();
   </script>
 </head>
-<body class="hold-transition layout-top-nav">
-<div class="wrapper">
+<body>
 
-  <!-- ══ Navbar ══ -->
-  <nav class="main-header navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a href="{{ base | append: '/' | relative_url }}" class="navbar-brand">
-        <i class="fas fa-wifi mr-1"></i>
-        {{ t.org }} <span class="brand-edu">eduroam</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarMain">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link{% if page.url contains '/about' %} active{% endif %}" href="{{ base | append: '/about/' | relative_url }}">
-              <i class="fas fa-info-circle"></i>{{ t.nav_about }}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if page.url contains '/connect' %} active{% endif %}" href="{{ base | append: '/connect/' | relative_url }}">
-              <i class="fas fa-plug"></i>{{ t.nav_connect }}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if page.url contains '/coverage' %} active{% endif %}" href="{{ base | append: '/coverage/' | relative_url }}">
-              <i class="fas fa-map-marker-alt"></i>{{ t.nav_coverage }}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if page.url contains '/policy' %} active{% endif %}" href="{{ base | append: '/policy/' | relative_url }}">
-              <i class="fas fa-file-alt"></i>{{ t.nav_policy }}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if page.url contains '/support' %} active{% endif %}" href="{{ base | append: '/support/' | relative_url }}">
-              <i class="fas fa-headset"></i>{{ t.nav_support }}
-            </a>
-          </li>
-          <!-- 테마 전환 -->
-          <li class="nav-item dropdown ml-1">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" style="padding:0.5rem 0.7rem !important;" title="{{ t.theme_label }}">
-              <i class="fas fa-circle-half-stroke"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item" href="#" data-theme-choice="system">
-                <i class="fas fa-circle-half-stroke fa-fw mr-1"></i>{{ t.theme_system }}
-              </a>
-              <a class="dropdown-item" href="#" data-theme-choice="light">
-                <i class="fas fa-sun fa-fw mr-1"></i>{{ t.theme_light }}
-              </a>
-              <a class="dropdown-item" href="#" data-theme-choice="dark">
-                <i class="fas fa-moon fa-fw mr-1"></i>{{ t.theme_dark }}
-              </a>
-            </div>
-          </li>
-          <!-- 언어 전환 -->
-          <li class="nav-item dropdown ml-1">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" style="padding:0.5rem 0.7rem !important;">
-              <i class="fas fa-globe"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item{% if page.lang == 'ko' %} active{% endif %}" href="{{ ko_url | relative_url }}">
-                🇰🇷 한국어
-              </a>
-              <a class="dropdown-item{% if page.lang == 'en' %} active{% endif %}" href="{{ en_url | relative_url }}">
-                🇺🇸 English
-              </a>
-            </div>
-          </li>
-        </ul>
-      </div>
+<!-- ══ Navbar ══ -->
+<nav class="main-header navbar navbar-expand-md" data-bs-theme="dark">
+  <div class="container">
+    <a href="{{ base | append: '/' | relative_url }}" class="navbar-brand">
+      <i class="fas fa-wifi me-1"></i>
+      {{ t.org }} <span class="brand-edu">eduroam</span>
+    </a>
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarMain"
+            aria-controls="navbarMain" aria-expanded="false" aria-label="{{ t.nav_menu }}">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto align-items-md-center">
+        <li class="nav-item">
+          <a class="nav-link{% if page.url contains '/about' %} active{% endif %}" href="{{ base | append: '/about/' | relative_url }}">
+            <i class="fas fa-info-circle"></i>{{ t.nav_about }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if page.url contains '/connect' %} active{% endif %}" href="{{ base | append: '/connect/' | relative_url }}">
+            <i class="fas fa-plug"></i>{{ t.nav_connect }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if page.url contains '/coverage' %} active{% endif %}" href="{{ base | append: '/coverage/' | relative_url }}">
+            <i class="fas fa-map-marker-alt"></i>{{ t.nav_coverage }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if page.url contains '/policy' %} active{% endif %}" href="{{ base | append: '/policy/' | relative_url }}">
+            <i class="fas fa-file-alt"></i>{{ t.nav_policy }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if page.url contains '/support' %} active{% endif %}" href="{{ base | append: '/support/' | relative_url }}">
+            <i class="fas fa-headset"></i>{{ t.nav_support }}
+          </a>
+        </li>
+
+        <!-- 테마 전환 -->
+        <li class="nav-item dropdown nav-utility">
+          <button class="nav-link dropdown-toggle" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ t.theme_label }}">
+            <i class="fas fa-circle-half-stroke"></i>
+            <span class="d-md-none ms-1">{{ t.theme_label }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-md-end">
+            <li><button class="dropdown-item" type="button" data-theme-choice="system">
+              <i class="fas fa-circle-half-stroke fa-fw me-1"></i>{{ t.theme_system }}
+            </button></li>
+            <li><button class="dropdown-item" type="button" data-theme-choice="light">
+              <i class="fas fa-sun fa-fw me-1"></i>{{ t.theme_light }}
+            </button></li>
+            <li><button class="dropdown-item" type="button" data-theme-choice="dark">
+              <i class="fas fa-moon fa-fw me-1"></i>{{ t.theme_dark }}
+            </button></li>
+          </ul>
+        </li>
+
+        <!-- 언어 전환 -->
+        <li class="nav-item dropdown nav-utility">
+          <button class="nav-link dropdown-toggle" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ t.lang_label }}">
+            <i class="fas fa-globe"></i>
+            <span class="d-md-none ms-1">{{ t.lang_name }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-md-end">
+            <li><a class="dropdown-item{% if page.lang == 'ko' %} active{% endif %}" href="{{ ko_url | relative_url }}" lang="ko" hreflang="ko">한국어</a></li>
+            <li><a class="dropdown-item{% if page.lang == 'en' %} active{% endif %}" href="{{ en_url | relative_url }}" lang="en" hreflang="en">English</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
-  </nav>
-
-  <!-- ══ 콘텐츠 ══ -->
-  <div class="content-wrapper">
-    {{ content }}
   </div>
+</nav>
 
-  <!-- ══ Footer ══ -->
-  <footer class="main-footer">
-    <span>{{ t.support_dept }}</span>
-    <span class="divider">|</span>
-    <a href="{{ base | append: '/policy/' | relative_url }}">{{ t.footer_policy }}</a>
-    <span class="divider">|</span>
-    <a href="mailto:{{ site.support.email }}">{{ site.support.email }}</a>
-    <span class="divider">|</span>
-    <span>{{ t.footer_powered }} <a href="https://eduroam.kreonet.net" target="_blank">eduroamKR</a></span>
-  </footer>
+<!-- ══ 콘텐츠 ══ -->
+<main class="content-wrapper">
+  {{ content }}
+</main>
 
-</div>
+<!-- ══ Footer ══ -->
+<footer class="main-footer">
+  <span>{{ t.support_dept }}</span>
+  <span class="divider" aria-hidden="true">|</span>
+  <a href="{{ base | append: '/policy/' | relative_url }}">{{ t.footer_policy }}</a>
+  <span class="divider" aria-hidden="true">|</span>
+  <a href="mailto:{{ site.support.email }}">{{ site.support.email }}</a>
+  <span class="divider" aria-hidden="true">|</span>
+  <span>{{ t.footer_powered }} <a href="https://eduroam.kreonet.net" target="_blank" rel="noopener">eduroamKR</a></span>
+</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"></script>
 <script>
-  // 테마 드롭다운 — 선택을 localStorage에 저장하고 즉시 반영
+  // 테마 드롭다운 — 시스템 / 라이트 / 다크 3단.
+  // 'system' 이면 OS 설정을 따르고, OS 설정이 도중에 바뀌면 즉시 반영한다.
   (function () {
     var html = document.documentElement;
     var items = document.querySelectorAll('[data-theme-choice]');
+    var mql = window.matchMedia('(prefers-color-scheme: dark)');
 
-    function getCurrent() {
+    function stored() {
       try { return localStorage.getItem('theme') || 'system'; } catch (e) { return 'system'; }
     }
 
-    function setActive(choice) {
+    function applyTheme(choice) {
+      var resolved = (choice === 'light' || choice === 'dark')
+        ? choice
+        : (mql.matches ? 'dark' : 'light');
+      html.setAttribute('data-bs-theme', resolved);
+      html.classList.toggle('dark-theme', resolved === 'dark');
       items.forEach(function (el) {
         el.classList.toggle('active', el.dataset.themeChoice === choice);
       });
     }
 
-    function apply(choice) {
-      if (choice === 'light' || choice === 'dark') {
-        html.setAttribute('data-theme', choice);
-      } else {
-        html.removeAttribute('data-theme');
-      }
-      try { localStorage.setItem('theme', choice); } catch (e) {}
-      setActive(choice);
-    }
-
-    setActive(getCurrent());
-
     items.forEach(function (el) {
-      el.addEventListener('click', function (e) {
-        e.preventDefault();
-        apply(el.dataset.themeChoice);
+      el.addEventListener('click', function () {
+        var choice = el.dataset.themeChoice;
+        try { localStorage.setItem('theme', choice); } catch (e) {}
+        applyTheme(choice);
       });
     });
+
+    mql.addEventListener('change', function () {
+      if (stored() === 'system') { applyTheme('system'); }
+    });
+
+    applyTheme(stored());
   })();
 </script>
 </body>

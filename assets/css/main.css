@@ -1,117 +1,172 @@
-html {
-  color-scheme: light dark;
-}
+/* ============================================================
+   eduroam 안내 사이트 — Bootstrap 5.3 위의 사이트 스타일
+
+   색은 전부 Radix Colors 스케일에서 온다 (vendor/radix-colors.css).
+   여기서는 "역할 → 스케일 단계" 매핑만 하고, 아래 컴포넌트 규칙은
+   역할 토큰만 참조한다. hex 를 직접 쓰지 않는다.
+
+   라이트/다크 구조:
+     - 스케일 값 자체는 Radix 가 .dark-theme 에서 통째로 갈아끼운다.
+       그래서 대부분의 역할은 여기서 한 번만 정의하면 양쪽에서 맞는다.
+     - 다크에서 *역할이 달라지는 것*만 :root[data-bs-theme="dark"] 에 다시 쓴다.
+       :root 로 한정하는 이유는 navbar 가 자기 스코프에 data-bs-theme="dark" 를
+       달고 있기 때문이다. 한정하지 않으면 navbar 안에서 역할만 다크로 바뀌고
+       스케일 값은 라이트인 상태가 되어 흰 바탕에 흰 글씨가 된다.
+       (예: 라이트는 페이지 slate-2 / 카드 slate-1 로 카드가 더 밝고,
+        다크는 페이지 slate-1 / 카드 slate-2 로 카드가 더 밝다 — 뒤집힌다.)
+     - light-dark() 는 쓰지 않는다. 구버전 Samsung Internet 미지원. (ADR-0002)
+   ============================================================ */
+
+/* ── 1. 역할 토큰 ───────────────────────────────────────── */
 
 :root {
-  --edu-blue: #003d7a;
-  --edu-light: #0066cc;
-  --edu-accent: #e8f4fd;
+  color-scheme: light;
 
-  /* 라이트 테마 변수 (기존 색상 그대로) */
-  --bg: #f4f6f9;
-  --card-bg: #ffffff;
-  --card-border: transparent;
-  --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  --card-shadow-hover: 0 6px 20px rgba(0,0,0,0.12);
-  --card-shadow-sm: 0 1px 8px rgba(0,0,0,0.07);
-  --card-text: #222;
-  --card-subtext: #888;
+  /* eduroam 브랜드 네이비 — 라이트 navbar/히어로의 면 색으로만 쓴다.
+     글자색으로 쓰면 다크 카드 위 명암비 1.43 이라 못 읽는다. (ADR-0002) */
+  --edu-navy: #003d7a;
 
-  --header-card-bg: #ffffff;
-  --header-card-border: var(--edu-accent);
-  --header-card-text: var(--edu-blue);
+  --surface-page:   var(--slate-2);
+  --surface-card:   var(--slate-1);
+  --surface-sunken: var(--slate-3);
+  --surface-hover:  var(--blue-3);
 
-  --list-border: #f0f0f0;
-  --list-hover-bg: var(--edu-accent);
-  --list-date: #aaa;
+  --line:        var(--slate-6);
+  --line-subtle: var(--slate-4);
 
-  --section-divider: #f5f5f5;
-  --tab-inactive-bg: #f8f9fa;
-  --tab-inactive-text: #555;
+  --text:        var(--slate-12);
+  --text-muted:  var(--slate-11);
+  --text-accent: var(--blue-11);
 
-  --faq-text: #555;
+  /* blue-11 + #fff = 4.77. blue-9 는 흰 글자 기준 3.26 이라 작은 글자에 못 쓴다. */
+  --accent-solid:       var(--blue-11);
+  --accent-solid-hover: var(--blue-12);
+  --on-accent: #fff;
+
+  --nav-bg:     var(--edu-navy);
+  --nav-border: var(--blue-9);
+  /* 네이비 → blue-12 로 살짝 깊어지는 정도만. 원래 쓰던 #0055aa/#0080cc 로 가는
+     그라디언트는 밝은 끝에서 흰 글자조차 4.23 이라 못 쓴다 (측정값). */
+  --hero-bg: linear-gradient(135deg, var(--blue-12) 0%, var(--edu-navy) 100%);
+  --hero-text: #fff;
+  --hero-text-muted: rgba(255, 255, 255, 0.85);
+  /* navbar·히어로의 어두운 면 위에 올라가는 브랜드 강조색 */
+  --brand-edu: var(--blue-7);
+
+  --shadow:       0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-sm:    0 1px 8px rgba(0, 0, 0, 0.07);
+  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.12);
+
+  --radius:    10px;
+  --radius-sm: 8px;
+
+  /* Bootstrap 컴포넌트(alert, nav-tabs, badge, dropdown…)가 따라오게 한다 */
+  --bs-body-bg: var(--surface-page);
+  --bs-body-color: var(--text);
+  --bs-secondary-color: var(--text-muted);
+  --bs-tertiary-bg: var(--surface-sunken);
+  --bs-border-color: var(--line);
+  --bs-emphasis-color: var(--text);
+  --bs-link-color: var(--text-accent);
+  --bs-link-hover-color: var(--blue-12);
+  --bs-font-sans-serif: 'Noto Sans KR', system-ui, -apple-system, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0b1220;
-    --card-bg: #1a2538;
-    --card-border: #2a3a55;
-    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --card-shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.45);
-    --card-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --card-text: #e5e9f0;
-    --card-subtext: #94a3b8;
+:root[data-bs-theme="dark"] {
+  color-scheme: dark;
 
-    --header-card-bg: #1a2538;
-    --header-card-border: #2a3a55;
-    --header-card-text: #93c5fd;
+  /* 다크에서 뒤집히는 역할만 */
+  --surface-page:   var(--slate-1);
+  --surface-card:   var(--slate-2);
+  --surface-sunken: var(--slate-3);
 
-    --list-border: #2a3a55;
-    --list-hover-bg: #243149;
-    --list-date: #6b7a91;
-  }
+  /* 채도 높은 네이비 블록이 어두운 페이지 위에 떠 보이지 않게 가라앉힌다 */
+  --nav-bg:     var(--slate-2);
+  --nav-border: var(--slate-6);
+  --hero-bg: linear-gradient(135deg, var(--slate-2) 0%, var(--slate-4) 100%);
+  --hero-text: var(--slate-12);
+  --hero-text-muted: var(--slate-11);
+  /* 다크 navbar(slate-2) 위에서 blue-7 은 2.57 이라 못 읽는다 → blue-11 (8.37) */
+  --brand-edu: var(--blue-11);
+
+  /* 다크의 blue-11 은 밝은 색이므로 그 위 글자는 어두워야 한다 (8.97) */
+  --on-accent: var(--slate-1);
+
+  /* 어두운 배경에서 그림자는 보이지 않는다. 경계는 테두리가 만든다. */
+  --shadow:       0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
-body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--card-text); transition: background 0.3s ease, color 0.3s ease; }
+/* ── 2. 베이스 ──────────────────────────────────────────── */
 
-/* AdminLTE의 .wrapper / .content-wrapper가 자체 배경을 박아두므로 변수로 덮어씀 */
-.wrapper,
-.content-wrapper,
-body.layout-top-nav { background: var(--bg) !important; transition: background 0.3s ease; }
+body {
+  font-family: var(--bs-font-sans-serif);
+  background: var(--surface-page);
+  color: var(--text);
+  /* 한국어는 어절 단위로 끊는다. 없으면 "프로파/일" 처럼 잘린다. (ADR-0003) */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-/* ── Navbar ── */
+.content-wrapper { flex: 1 0 auto; }
+
+/* Bootstrap 은 a 색을 --bs-link-color-rgb 로 조립한다. hex 토큰으로는 그 변수를
+   채울 수 없으므로 여기서 직접 건다. navbar/footer 링크는 더 구체적인 규칙이 이긴다. */
+a { color: var(--text-accent); }
+a:hover { color: var(--bs-link-hover-color); }
+
+code { color: var(--bs-link-hover-color); }
+
+/* 인라인 색상을 걷어내며 생긴 유틸 — Bootstrap 의 text-body / text-body-secondary
+   와 짝이 되는 강조색. 아이콘과 소제목이 쓴다. */
+.text-accent { color: var(--text-accent) !important; }
+
+/* ── 3. Navbar ──────────────────────────────────────────── */
+
 .main-header.navbar {
-  background: var(--edu-blue) !important;
-  border-bottom: 3px solid var(--edu-light);
+  background: var(--nav-bg);
+  border-bottom: 3px solid var(--nav-border);
+  padding-block: 0.4rem;
 }
 .main-header .navbar-brand {
-  color: #fff !important;
+  color: #fff;
   font-weight: 700;
   font-size: 1.05rem;
   letter-spacing: -0.3px;
 }
-.main-header .navbar-brand .brand-edu { color: #7ec8f7; }
-.navbar-nav .nav-link {
-  color: rgba(255,255,255,0.85) !important;
+.main-header .navbar-brand .brand-edu { color: var(--brand-edu); }
+
+.main-header .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.88rem;
-  padding: 0.5rem 0.9rem !important;
+  padding: 0.5rem 0.9rem;
   border-radius: 4px;
-  transition: background 0.15s;
+  white-space: nowrap;
+  background: none;
+  border: 0;
 }
-.navbar-nav .nav-link:hover,
-.navbar-nav .nav-link.active {
-  background: rgba(255,255,255,0.15) !important;
-  color: #fff !important;
-}
-.navbar-nav .nav-link i { margin-right: 4px; }
-.navbar-nav .nav-link { white-space: nowrap; }
-
-/* ── Navbar 드롭다운 (테마/언어) ── */
-.main-header .dropdown-menu {
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border, rgba(0,0,0,0.08));
-  box-shadow: var(--card-shadow-sm);
-}
-.main-header .dropdown-item {
-  color: var(--card-text);
-  font-size: 0.88rem;
-}
-.main-header .dropdown-item:hover,
-.main-header .dropdown-item:focus {
-  background-color: var(--list-hover-bg);
-  color: var(--card-text);
-}
-.main-header .dropdown-item.active,
-.main-header .dropdown-item:active {
-  background-color: var(--edu-light);
+.main-header .navbar-nav .nav-link:hover,
+.main-header .navbar-nav .nav-link:focus-visible,
+.main-header .navbar-nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
+.main-header .navbar-nav .nav-link i { margin-right: 4px; }
+.main-header .nav-utility .nav-link { padding-inline: 0.7rem; }
+.main-header .nav-utility .dropdown-toggle::after { display: none; }
 
-/* ── Hero ── */
+/* ── 4. Hero ────────────────────────────────────────────── */
+
+.hero-section,
+.page-hero {
+  background: var(--hero-bg);
+  color: var(--hero-text);
+}
 .hero-section {
-  background: linear-gradient(135deg, var(--edu-blue) 0%, #0055aa 60%, #0080cc 100%);
-  color: #fff;
   padding: 52px 0 44px;
   text-align: center;
 }
@@ -120,40 +175,33 @@ body.layout-top-nav { background: var(--bg) !important; transition: background 0
   font-weight: 700;
   letter-spacing: -1px;
 }
-.hero-section .eduroam-logo span { color: #7ec8f7; }
+.hero-section .eduroam-logo span { color: var(--brand-edu); }
 .hero-section .sub {
   font-size: 1rem;
-  opacity: 0.85;
+  color: var(--hero-text-muted);
   margin-top: 6px;
 }
 .hero-section .hero-btn {
+  display: inline-block;
   margin-top: 22px;
-  background: #fff;
-  color: var(--edu-blue);
-  border: none;
+  background: var(--surface-card);
+  color: var(--text-accent);
+  border: 1px solid var(--line);
   border-radius: 24px;
   padding: 10px 32px;
   font-size: 0.92rem;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-  transition: transform 0.15s, box-shadow 0.15s;
   text-decoration: none;
-  display: inline-block;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 .hero-section .hero-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-  color: var(--edu-blue);
-  text-decoration: none;
+  box-shadow: var(--shadow-hover);
+  color: var(--text-accent);
 }
 
-/* ── Page Hero (sub pages) ── */
-.page-hero {
-  background: linear-gradient(135deg, var(--edu-blue) 0%, #0055aa 100%);
-  color: #fff;
-  padding: 36px 0 30px;
-}
+.page-hero { padding: 36px 0 30px; }
 .page-hero h1 {
   font-size: 1.6rem;
   font-weight: 700;
@@ -161,138 +209,137 @@ body.layout-top-nav { background: var(--bg) !important; transition: background 0
 }
 .page-hero .page-sub {
   font-size: 0.9rem;
-  opacity: 0.8;
+  color: var(--hero-text-muted);
   margin: 0;
 }
 
-/* ── 퀵 카드 ── */
-.quick-cards {
-  /* Bootstrap 5 gutter 패턴 — 값을 바꾸면 카드 사이 좌우 여백이 조정됨
-     https://getbootstrap.com/docs/5.0/layout/gutters/ */
-  --bs-gutter-x: 1.45rem;
-  margin-top: -28px;
-  margin-left: calc(var(--bs-gutter-x) * -0.5);
-  margin-right: calc(var(--bs-gutter-x) * -0.5);
-}
-.quick-cards > [class*="col-"] {
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-}
+/* ── 5. 퀵 카드 ─────────────────────────────────────────── */
+
+.quick-cards { margin-top: -28px; }
+
 .quick-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  box-shadow: var(--card-shadow);
+  display: block;
+  background: var(--surface-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   padding: 22px 16px;
   text-align: center;
-  transition: transform 0.15s, box-shadow 0.15s, background 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
   text-decoration: none;
-  display: block;
   color: inherit;
+  height: 100%;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 .quick-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--card-shadow-hover);
-  text-decoration: none;
+  box-shadow: var(--shadow-hover);
   color: inherit;
 }
-.quick-card .icon { font-size: 1.9rem; color: var(--edu-light); margin-bottom: 10px; }
-.quick-card .title { font-weight: 700; font-size: 0.9rem; color: var(--card-text); }
-.quick-card .desc { font-size: 0.76rem; color: var(--card-subtext); margin-top: 4px; line-height: 1.4; }
+.quick-card .icon { font-size: 1.9rem; color: var(--text-accent); margin-bottom: 10px; }
+.quick-card .title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.quick-card .desc { font-size: 0.76rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
 
-/* ── 카드 공통 ── */
+/* ── 6. 카드 / 리스트 ───────────────────────────────────── */
+
 .card {
-  background: var(--card-bg);
-  border-radius: 8px;
-  border: 1px solid var(--card-border);
-  box-shadow: var(--card-shadow-sm);
-  transition: background 0.3s ease, border-color 0.3s ease;
+  background: var(--surface-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 .card-header {
-  background: var(--header-card-bg);
-  border-bottom: 2px solid var(--header-card-border);
+  background: var(--surface-card);
+  border-bottom: 2px solid var(--line);
   font-weight: 700;
   font-size: 0.9rem;
-  color: var(--header-card-text);
+  color: var(--text-accent);
   padding: 12px 18px;
-  border-radius: 8px 8px 0 0 !important;
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
-.card-header i { margin-right: 6px; color: var(--edu-light); }
+.card-header i { margin-right: 6px; }
+.card-header .header-link {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.card-header .header-link:hover { color: var(--text-accent); }
 
-/* ── 공지 리스트 ── */
-.notice-list { list-style: none; margin: 0; padding: 0; }
-.notice-list li {
+.notice-list,
+.help-list { list-style: none; margin: 0; padding: 0; }
+
+.notice-list li,
+.help-list li {
+  font-size: 0.83rem;
+  border-bottom: 1px solid var(--line-subtle);
+  color: var(--text);
+  transition: background 0.12s;
+}
+.notice-list li:last-child,
+.help-list li:last-child { border-bottom: none; }
+.notice-list li:hover,
+.help-list li:hover { background: var(--surface-hover); }
+
+/* 링크가 항목 전체를 덮는다 — 클릭 영역과 hover 영역을 일치시킨다 */
+.notice-list a,
+.help-list a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   padding: 9px 18px;
-  font-size: 0.83rem;
-  border-bottom: 1px solid var(--list-border);
-  color: var(--card-text);
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.3s ease;
+  color: inherit;
+  text-decoration: none;
 }
-.notice-list li:last-child { border-bottom: none; }
-.notice-list li:hover { background: var(--list-hover-bg); }
+.help-list a { justify-content: flex-start; }
+.help-list a i { font-size: 0.7rem; color: var(--text-muted); margin-right: 6px; }
+
 .notice-list .badge-new {
-  background: var(--edu-light);
-  color: #fff;
+  background: var(--accent-solid);
+  color: var(--on-accent);
   font-size: 0.68rem;
   padding: 2px 7px;
   border-radius: 10px;
   margin-right: 6px;
 }
-.notice-list .date { color: var(--list-date); font-size: 0.75rem; flex-shrink: 0; margin-left: 8px; }
+.notice-list .date { color: var(--text-muted); font-size: 0.75rem; flex-shrink: 0; }
 
-/* ── 도움말 리스트 ── */
-.help-list { list-style: none; margin: 0; padding: 0; }
-.help-list li {
-  padding: 9px 18px;
-  font-size: 0.83rem;
-  border-bottom: 1px solid var(--list-border);
-  color: var(--card-text);
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.3s ease;
-}
-.help-list li:last-child { border-bottom: none; }
-.help-list li:hover { background: var(--list-hover-bg); }
-.help-list li i { font-size: 0.7rem; color: var(--list-date); margin-right: 6px; }
+/* ── 7. 콘텐츠 섹션 ─────────────────────────────────────── */
 
-/* ── 콘텐츠 섹션 ── */
 .content-section { padding: 32px 0; }
+
 .section-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  box-shadow: var(--card-shadow-sm);
+  background: var(--surface-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
   padding: 28px 32px;
   margin-bottom: 20px;
-  transition: background 0.3s ease, border-color 0.3s ease;
 }
 .section-card h2 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--header-card-text);
+  color: var(--text-accent);
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 2px solid var(--header-card-border);
+  border-bottom: 2px solid var(--line);
 }
-.section-card h2 i { margin-right: 8px; color: var(--edu-light); }
+.section-card h2 i { margin-right: 8px; }
+.section-card p { color: var(--text); font-size: 0.9rem; line-height: 1.8; }
+.section-card .lead-note { color: var(--text-muted); font-size: 0.88rem; }
+
 .step-list { list-style: none; padding: 0; margin: 0; }
 .step-list li {
   display: flex;
   align-items: flex-start;
   padding: 10px 0;
-  border-bottom: 1px solid var(--section-divider);
-  color: var(--card-text);
+  border-bottom: 1px solid var(--line-subtle);
+  color: var(--text);
   font-size: 0.88rem;
 }
 .step-list li:last-child { border-bottom: none; }
 .step-num {
-  background: var(--edu-light);
-  color: #fff;
+  background: var(--accent-solid);
+  color: var(--on-accent);
   border-radius: 50%;
   width: 22px;
   height: 22px;
@@ -305,102 +352,92 @@ body.layout-top-nav { background: var(--bg) !important; transition: background 0
   margin-right: 12px;
   margin-top: 1px;
 }
+
+.os-tab { border-bottom: 1px solid var(--line); flex-wrap: nowrap; overflow-x: auto; }
 .os-tab .nav-link {
-  color: var(--tab-inactive-text) !important;
+  color: var(--text-muted);
   font-size: 0.85rem;
-  padding: 8px 18px !important;
-  background: var(--tab-inactive-bg);
-  border-radius: 0 !important;
-  transition: background 0.3s ease, color 0.3s ease;
+  padding: 8px 18px;
+  background: var(--surface-sunken);
+  border: 0;
+  border-radius: 0;
+  white-space: nowrap;
 }
+.os-tab .nav-link:hover { color: var(--text-accent); }
 .os-tab .nav-link.active {
-  background: var(--edu-blue) !important;
-  color: #fff !important;
+  background: var(--accent-solid);
+  color: var(--on-accent);
 }
-.faq-item {
-  border-bottom: 1px solid var(--list-border);
-  padding: 14px 0;
-}
+
+.faq-item { border-bottom: 1px solid var(--line-subtle); padding: 14px 0; }
 .faq-item:last-child { border-bottom: none; }
 .faq-q {
   font-weight: 700;
   font-size: 0.88rem;
-  color: var(--header-card-text);
+  color: var(--text-accent);
   margin-bottom: 6px;
 }
-.faq-q i { margin-right: 6px; color: var(--edu-light); }
+.faq-q i { margin-right: 6px; }
 .faq-a {
   font-size: 0.83rem;
-  color: var(--faq-text);
+  color: var(--text-muted);
   line-height: 1.6;
   padding-left: 22px;
 }
 
-/* ── Footer ── */
+/* 인증서 지문 — 옥텟 중간에서 끊기지 않게 한다 */
+.fingerprint {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* ── 8. Footer ──────────────────────────────────────────── */
+
 .main-footer {
-  background: var(--edu-blue);
-  color: rgba(255,255,255,0.6);
+  flex-shrink: 0;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.78rem;
   padding: 14px 24px;
   text-align: center;
 }
-.main-footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
-.main-footer a:hover { color: #fff; }
-.main-footer .divider { margin: 0 8px; }
+.main-footer a { color: #fff; text-decoration: none; }
+.main-footer a:hover { text-decoration: underline; }
+.main-footer .divider { margin: 0 8px; opacity: 0.5; }
 
-/* ============================================================
-   다크 미드나잇 테마
-   - 시스템 다크모드(prefers-color-scheme)에 자동 반응
-   - [data-theme="light"]/[data-theme="dark"]로 수동 오버라이드 가능
-   ============================================================ */
-[data-theme="dark"] {
-  --bg: #0b1220;
-  --card-bg: #1a2538;
-  --card-border: #2a3a55;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  --card-shadow-hover: 0 4px 14px rgba(0,0,0,0.45);
-  --card-shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --card-text: #e5e9f0;
-  --card-subtext: #94a3b8;
+/* ── 9. 반응형 ──────────────────────────────────────────── */
+/* Bootstrap 그리드는 열 배치만 바꾼다. 여백과 타이포는 여기서 줄인다. (ADR-0003) */
 
-  --header-card-bg: #1a2538;
-  --header-card-border: #2a3a55;
-  --header-card-text: #93c5fd;
+@media (max-width: 767.98px) {
+  .main-header .navbar-nav .nav-link { padding-inline: 0.6rem; }
+  .main-header .nav-utility .dropdown-menu { border: 0; background: none; padding-left: 1rem; }
 
-  --list-border: #2a3a55;
-  --list-hover-bg: #243149;
-  --list-date: #6b7a91;
+  .hero-section { padding: 36px 0 32px; }
+  .hero-section .eduroam-logo { font-size: 1.8rem; }
+  .hero-section .sub { font-size: 0.9rem; }
 
-  --section-divider: #243149;
-  --tab-inactive-bg: #1a2538;
-  --tab-inactive-text: #94a3b8;
+  .page-hero { padding: 26px 0 22px; }
+  .page-hero h1 { font-size: 1.25rem; }
 
-  --faq-text: #c9d1de;
+  .content-section { padding: 22px 0; }
+  .section-card { padding: 20px 16px; border-radius: var(--radius-sm); }
+  .section-card h2 { font-size: 0.98rem; }
+
+  .quick-cards { margin-top: -20px; }
+  .quick-card { padding: 16px 10px; }
+  .quick-card .icon { font-size: 1.5rem; }
+
+  .notice-list a,
+  .help-list a { padding: 9px 14px; }
+  .main-footer .divider { margin: 0 5px; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0b1220;
-    --card-bg: #1a2538;
-    --card-border: #2a3a55;
-    --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    --card-shadow-hover: 0 4px 14px rgba(0,0,0,0.45);
-    --card-shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-    --card-text: #e5e9f0;
-    --card-subtext: #94a3b8;
-
-    --header-card-bg: #1a2538;
-    --header-card-border: #2a3a55;
-    --header-card-text: #93c5fd;
-
-    --list-border: #2a3a55;
-    --list-hover-bg: #243149;
-    --list-date: #6b7a91;
-
-    --section-divider: #243149;
-    --tab-inactive-bg: #1a2538;
-    --tab-inactive-text: #94a3b8;
-
-    --faq-text: #c9d1de;
-  }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  .quick-card:hover,
+  .hero-section .hero-btn:hover { transform: none; }
 }
