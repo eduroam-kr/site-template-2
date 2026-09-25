@@ -94,3 +94,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - .ruby-version
+  # 내부 문서 — 사이트로 배포하지 않는다
+  - CLAUDE.md
+  - README.md
+  - prj
