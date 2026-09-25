@@ -104,12 +104,29 @@ code { color: var(--bs-link-hover-color); }
   padding-block: 0.4rem;
 }
 .main-header .navbar-brand {
+  display: flex;
+  align-items: center;
   color: var(--nav-fg);
+}
+/* 컬러 SVG 한 장으로 흰 로고를 만든다. 흰색 PNG 를 따로 들고 다니지 않는다 —
+   로고는 단색이라 강조색이 무엇이든 그 위에 올라간다. (ADR-0006) */
+.main-header .brand-logo {
+  height: 30px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+.main-header .brand-sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 12px;
+  background: currentColor;
+  opacity: 0.4;
+}
+.main-header .brand-org {
   font-weight: 700;
   font-size: 1.05rem;
   letter-spacing: -0.3px;
 }
-.main-header .navbar-brand .brand-edu { color: var(--accent-contrast); opacity: 0.75; }
 
 .main-header .navbar-nav .nav-link {
   color: var(--nav-fg);
@@ -389,6 +406,8 @@ code { color: var(--bs-link-hover-color); }
 
 @media (max-width: 767.98px) {
   .main-header .navbar-nav .nav-link { padding-inline: 0.6rem; }
+  .main-header .brand-logo { height: 26px; }
+  .main-header .brand-org { font-size: 0.95rem; }
   .main-header .nav-utility .dropdown-menu { border: 0; background: none; padding-left: 1rem; }
 
   .hero-section { padding: 36px 0 32px; }

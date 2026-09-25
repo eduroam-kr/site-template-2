@@ -65,8 +65,10 @@
 <nav class="main-header navbar navbar-expand-md" data-bs-theme="dark">
   <div class="container">
     <a href="{{ base | append: '/' | relative_url }}" class="navbar-brand">
-      <i class="fas fa-wifi me-1"></i>
-      {{ t.org }} <span class="brand-edu">eduroam</span>
+      <img class="brand-logo" src="{{ '/assets/images/eduroam-logo.svg' | relative_url }}"
+           alt="eduroam" width="90" height="35">
+      <span class="brand-sep" aria-hidden="true"></span>
+      <span class="brand-org">{{ t.org }}</span>
     </a>
     <button class="navbar-toggler" type="button"
             data-bs-toggle="collapse" data-bs-target="#navbarMain"
