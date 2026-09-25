@@ -1,12 +1,12 @@
 ---
 layout: default
-title: 공지사항
+title: Notices
 ---
 
 <section class="page-hero">
   <div class="container">
-    <h1><i class="fas fa-bullhorn me-2"></i>공지사항</h1>
-    <p class="page-sub">{{ site.t[page.lang].org }} eduroam 서비스 공지</p>
+    <h1><i class="fas fa-bullhorn me-2"></i>Notices</h1>
+    <p class="page-sub">{{ site.t[page.lang].org }} eduroam service notices</p>
   </div>
 </section>
 
@@ -17,13 +17,13 @@ title: 공지사항
     <ul class="notice-list">
       {% for notice in notices %}
       <li><a href="{{ notice.url | relative_url }}">
-        <span>{% if notice.is_new %}<span class="badge-new">NEW</span>{% endif %}{{ notice.title_ko }}</span>
+        <span>{% if notice.is_new %}<span class="badge-new">NEW</span>{% endif %}{{ notice.title_en }}</span>
         <span class="date">{{ notice.date | date: "%Y.%m.%d" }}</span>
       </a></li>
       {% endfor %}
     </ul>
     {% else %}
-    <p class="text-body-secondary" style="font-size:0.9rem; margin:0; padding:1rem 0;">등록된 공지사항이 없습니다.</p>
+    <p class="text-body-secondary" style="font-size:0.9rem; margin:0; padding:1rem 0;">No notices at this time.</p>
     {% endif %}
   </div>
 </div>
