@@ -4,11 +4,13 @@ ADR-0001 (Bootstrap 5.3), ADR-0002 (Radix Colors), ADR-0003 (반응형) 이 승�
 
 ## 선행
 
-### T-0001 — 로컬 Ruby 3.1 빌드 환경 `TODO`
+### T-0001 — 로컬 Ruby 빌드 환경 `DONE`
 
-`.ruby-version` 은 3.1.3 인데 이 머신은 시스템 Ruby 2.6.10 뿐이고 rbenv / asdf / Homebrew Ruby 가 없다. `bundle install` 이 `ffi-1.17.4` 에서 멈춘다.
+`.ruby-version` 이 가리키던 3.1 은 Homebrew 에서 2026-05-07 에 비활성화됐다 (upstream EOL). 그래서 **3.3 으로 올렸다** — `nro-site` 도 이미 3.3 으로 올린 전례가 있다. 로컬 `.ruby-version` 과 Actions 워크플로의 `ruby-version` 을 함께 3.3 으로 맞춰 둘이 갈라지지 않게 했다.
 
-프레임워크를 갈아엎으면서 렌더 결과를 못 보는 건 말이 안 된다. push 해서 Actions 로그로 확인하는 건 검증이 아니다. 이걸 먼저 깐다.
+`Gemfile.lock` 을 추적 대상으로 돌리고 `x86_64-linux` 플랫폼을 추가했다. 프레임워크를 바꾸는 동안 "로컬에서 본 것 == 배포되는 것"이 성립해야 하기 때문이다.
+
+`bundle exec jekyll build` 로컬 실행 확인함.
 
 관련: OBS-20260925-05
 
